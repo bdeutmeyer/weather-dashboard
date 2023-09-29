@@ -10,7 +10,6 @@
     //create elements
     //update the current weather container with elements
 //Display 5-day forecast
-    //5-day forecast requires latitude and longitude, so figure out how to extract lat and long from our current weather response
     //extract forecast data from api response
     //loop through forecast data, and for each of 5 days, create html elements to display info
     //append elements to container
@@ -26,4 +25,19 @@
 //Initial page load
     //load the search history from local storage and display it using perhaps a display search history function
 
-    //API key: 2f4e60f9bd81d9d1b4be76ba147ad53c
+// Current conditions data paths:
+    // data.weather.main (basic description)
+    // data.weather.icon ?? maybe?
+    // data.wind[0].value ? - wind speed
+    // data.main.humidity
+    // data.main.temp (maybe do a rounding function?)
+
+// Forecast data paths:
+    // data.list[i].weather.main
+    // data.list[i].weather.icon ??
+    // data.list[i].wind[0].value ?
+    // data.list[i].main.humidity
+    // data.list[i].main.temp
+
+// https://openweathermap.org/img/wn/{icon id}@2x.png
+
