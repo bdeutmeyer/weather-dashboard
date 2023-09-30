@@ -13,6 +13,7 @@
     <!-- Header -->
     <header class="text-center text-white bg-dark">
         <h1>Weather Dashboard</h1>
+        <h2 id="date"></h2>
     </header>
     <!-- Main section -->
     <main class="container">
@@ -25,7 +26,6 @@
                 </form>
             </aside>
             <section class="col-8">
-                <h2>Current Conditions</h2>
                 <div id="current-weather">
                     <h2 id="current-weather-heading"></h2>
                     <ul id="current-weather-data"></ul>
@@ -36,12 +36,12 @@
         <section class="d-flex">
             <aside class="col-4">
                 <div>
-                    <h4>Previously viewed</h4>
+                    <h4>Past searches</h4>
                 </div>
                 <div id="search-history" class="list-item flex-row justify-space-between align-center"></div>
             </aside>
             <section class="col-8">
-                <h2>5-Day Forecast</h2>
+                <h2 id="forecast-heading"></h2>
                 <div id="5day-forecast"></div>
             </section>
         </section>
