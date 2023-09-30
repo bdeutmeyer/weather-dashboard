@@ -6,9 +6,16 @@ var searchHistoryEl = document.getElementById('search-history');
 var searchHistory = JSON.parse(localStorage.getItem('city')) || [];
 var currentWeatherEl = document.getElementById('current-weather');
 var currentWeatherHeading = document.getElementById('current-weather-heading');
-var currentWeatherData = document.getElementById('current-weather-data')
+var currentWeatherData = document.getElementById('current-weather-data');
 var forecastEl = document.getElementById('5day-forecast');
-var now = dayjs().format('MMM DD, YYYY');
+var forecastHeading = document.getElementById('forecast-heading');
+
+var renderDate = function() {
+    var currentDate = document.getElementById('date');
+    var now = dayjs().format('MMM DD, YYYY');
+    currentDate.textContent = now;
+
+}
 
 var searchFormHandler = function(event) {
     event.preventDefault();
@@ -19,7 +26,6 @@ var searchFormHandler = function(event) {
         searchInputEl.value = '';
         searchHistory.push(city);
         localStorage.setItem('city', JSON.stringify(searchHistory));
-        console.log(city);
         } else {
             alert('City not found');
         }
@@ -31,7 +37,6 @@ var fetchCoordinates = function(cityName) {
     fetch(geocodeURL)
         .then(function (response) {
             if (response.ok) {
-            console.log(response);
             response.json()
             .then(function (data) {
                 fetchCurrentData(data[0].lat, data[0].lon);
@@ -70,9 +75,8 @@ var fetchForecastData = function(lat, lon) {
                 console.log(response);
                 response.json()
                 .then(function (data) {
-                    console.log(data);
                     console.log(data.list);
-                    // renderForecast();
+                    renderForecast(data.list);
                 });
             } else {
                 alert('Error: ' + response.statusText);
@@ -81,30 +85,80 @@ var fetchForecastData = function(lat, lon) {
 }
 
 var renderCurrent = function(data) {
-
-    // currentWeatherHeading.textContent = ;
-
+    currentWeatherHeading.textContent = 'Current conditions in ' + data.name;
+    if (currentWeatherData.hasChildNodes()) {
+        currentWeatherData.innerHTML = null;
+    } 
     var currentCondition = document.createElement('li');
     var currentConditionIcon = document.createElement('img');
     var currentTemp = document.createElement('li');
     var currentHumidity = document.createElement('li');
     var currentWind = document.createElement('li');
     
-    currentCondition.textContent = 'Current conditions: ' + data.weather[0].main
-    currentConditionIcon.setAttribute('href', 'https://openweathermap.org/img/wn/' + data.weather.icon + '@2x.png');
+    currentCondition.textContent = data.weather[0].main + ' '
+    currentCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
+    currentConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
+    console.log(data.weather[0].icon);
     currentTemp.textContent = 'Temperature: ' + data.main.temp + '˚ F';
     currentHumidity.textContent = 'Humidity: ' + data.main.humidity + 
     '%';
     currentWind.textContent = 'Wind Speed: ' + data.wind.speed + ' mph';
 
-    currentWeatherData.append(currentCondition, currentTemp, currentHumidity, currentWind);
+    currentWeatherData.append(currentCondition, currentConditionIcon, currentTemp, currentHumidity, currentWind);
 }
 
-var renderForecast = function() {
-    //create element
-    //set relevant data as content
-    //append to page
+
+
+
+var renderForecast = function(data) {
+    forecastHeading.textContent = '5-day forecast for ' + data.name;
+    if (forecastEl.hasChildNodes()) {
+        forecastEl.innerHTML = null;
+    } 
+    // var day1Forecast = document.createElement('div');
+    // var day2Forecast = document.createElement('div');
+    // var day3Forecast = document.createElement('div');
+    // var day4Forecast = document.createElement('div');
+    // var day5Forecast = document.createElement('div');
+    
+    var tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+    var forecastDate = data[0].dt_txt;
+    var matchDate = function() {
+        for (i = 0; i < 6; i++) {
+            if (forecastDate.startsWith(tomorrow)) {
+                console.log(data[i].dt_txt);
+            }
+        }
+        //     var tomorrowIndex = function() {
+
+        //     } 
+        //     var dataIndex = data[i].findIndex(tomorrowIndex);
+        //     // break;
+        //        console.log(dataIndex);
+        // }
+        // for (i = 0; i < 6; i++) {
+
+        // }
+
+
+    }
+matchDate();
 }
+//     var tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+//     console.log(tomorrow);
+
+//     day1Forecast.textContent = dayjs(data);
+//     currentCondition.textContent = data.weather[0].main + ' '
+//     currentCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
+//     currentConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
+//     console.log(data.weather[0].icon);
+//     currentTemp.textContent = 'Temperature: ' + data.main.temp + '˚ F';
+//     currentHumidity.textContent = 'Humidity: ' + data.main.humidity + 
+//     '%';
+//     currentWind.textContent = 'Wind Speed: ' + data.wind.speed + ' mph';
+
+//     forecastEl.append(day1Forecast, day2Forecast, day3Forecast, day4Forecast, day5Forecast);
+// }
 
 var renderHistory = function(city) {
     var pastCityEl = document.createElement('button');
@@ -123,6 +177,7 @@ searchHistoryEl.addEventListener('click', function(event) {
     
 })
 
+renderDate();
 //Example api path: data[i].lat OR data[i].lon
 //Forecast response: data.list[i].
 //Forecast list - new index every 3 hours. To get highs and lows, maybe 3 pm or 6 pm for highs, 3 am for lows? Match date? Take wind and humidity and stuff from that?
