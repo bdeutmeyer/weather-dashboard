@@ -1,7 +1,6 @@
 var searchSectionEl = document.getElementById('search');
 var searchFormEl = document.getElementById('search-form');
 var searchInputEl = document.getElementById('search-input');
-// var submitBtn = document.getElementById('submit-button'); -- probably unnecessary...unless needed for styling, delete id in html too
 var searchHistoryEl = document.getElementById('search-history');
 var searchHistory = JSON.parse(localStorage.getItem('city')) || [];
 var currentWeatherEl = document.getElementById('current-weather');
@@ -119,7 +118,7 @@ var renderCurrent = function(data) {
 }
 
 var renderForecast = function(data) {
-    forecastHeading.textContent = '5-day forecast:'
+    forecastHeading.textContent = '5-day forecast'
     if (forecastEl.hasChildNodes()) {
         forecastEl.innerHTML = null;
     } 
@@ -144,6 +143,7 @@ var renderForecast = function(data) {
         var forecastTemp = document.createElement('p');
         var forecastHumidity = document.createElement('p');
         var forecastWind = document.createElement('p');
+        var forecastCard = document.createElement('div');
     
         forecastDate.textContent = dates[i];
         forecastCondition.textContent = next5DaysAt3[i].weather[0].main;
@@ -153,14 +153,19 @@ var renderForecast = function(data) {
         forecastHumidity.textContent = 'Humidity: ' + next5DaysAt3[i].main.humidity + 
         '%';
         forecastWind.textContent = 'Wind Speed: ' + next5DaysAt3[i].wind.speed + ' mph';
-    
-        forecastEl.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
+        
+        forecastCard.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
+        forecastCard.setAttribute('class', 'col-2 m-1 ');
+        forecastEl.append(forecastCard);
+        
     } 
 }
 
 var renderHistory = function(city) {
     var pastCityEl = document.createElement('button');
     pastCityEl.textContent = city;
+    pastCityEl.setAttribute('class', 'btn m-1');
+    pastCityEl.setAttribute('style', 'text-align: center; background-color: var(--umber); color: var(--platinum); width: 100%');
     searchHistoryEl.appendChild(pastCityEl);
 }
 

@@ -1,3 +1,49 @@
+:root {
+    --cadet-gray: #83a0a0;
+    --platinum: #dbd9db;
+    --saffron: #EEB902;
+    --umber: #766153;
+    --midnight-green: #023C40;
+}
+
+body {
+    background-color: var(--cadet-gray);
+    font-family: 'Tenor Sans', sans-serif;
+}
+
+header {
+    background-color: var(--midnight-green);
+    padding: 15px;
+}
+
+h1,
+h3 {
+    color: var(--platinum);   
+    font-family: 'Young Serif', serif;
+}
+
+h2 {
+    color: white;
+    font-family: 'Young Serif', serif;
+    padding-top: 10px;
+}
+
+#submit-button {
+    text-align: center;
+    background-color: var(--umber);
+    color: var(--platinum);
+    width: 100%;
+}
+
+#search-heading {
+    text-align: center;
+}
+
+#current-weather, 
+#forecast-section {
+    padding-left: 30px;
+}
+
 img {
     width: 30px;
     height: auto;
