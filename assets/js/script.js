@@ -10,6 +10,7 @@ var currentWeatherData = document.getElementById('current-weather-data');
 var forecastEl = document.getElementById('5day-forecast');
 var forecastHeading = document.getElementById('forecast-heading');
 
+
 var renderDate = function() {
     var currentDate = document.getElementById('date');
     var now = dayjs().format('MMM DD, YYYY');
@@ -57,7 +58,6 @@ var fetchCurrentData = function(lat, lon) {
                 console.log(response);
                 response.json()
                 .then(function (data) {
-                    console.log(data);
                     renderCurrent(data);
                 });
             } else {
@@ -75,7 +75,6 @@ var fetchForecastData = function(lat, lon) {
                 console.log(response);
                 response.json()
                 .then(function (data) {
-                    console.log(data.list);
                     renderForecast(data.list);
                 });
             } else {
@@ -98,7 +97,6 @@ var renderCurrent = function(data) {
     currentCondition.textContent = data.weather[0].main + ' '
     currentCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
     currentConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
-    console.log(data.weather[0].icon);
     currentTemp.textContent = 'Temperature: ' + data.main.temp + '˚ F';
     currentHumidity.textContent = 'Humidity: ' + data.main.humidity + 
     '%';
@@ -107,59 +105,45 @@ var renderCurrent = function(data) {
     currentWeatherData.append(currentCondition, currentConditionIcon, currentTemp, currentHumidity, currentWind);
 }
 
-
-
-
 var renderForecast = function(data) {
-    forecastHeading.textContent = '5-day forecast for ' + data.name;
+    forecastHeading.textContent = '5-day forecast:'
     if (forecastEl.hasChildNodes()) {
         forecastEl.innerHTML = null;
     } 
-    // var day1Forecast = document.createElement('div');
-    // var day2Forecast = document.createElement('div');
-    // var day3Forecast = document.createElement('div');
-    // var day4Forecast = document.createElement('div');
-    // var day5Forecast = document.createElement('div');
     
-    var tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
-    var forecastDate = data[0].dt_txt;
-    var matchDate = function() {
-        for (i = 0; i < 6; i++) {
-            if (forecastDate.startsWith(tomorrow)) {
-                console.log(data[i].dt_txt);
-            }
+    var next5DaysAt3 = [];
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].dt_txt.endsWith('15:00:00')) {
+            next5DaysAt3.push(data[i]);
         }
-        //     var tomorrowIndex = function() {
+    } console.log(next5DaysAt3);
 
-        //     } 
-        //     var dataIndex = data[i].findIndex(tomorrowIndex);
-        //     // break;
-        //        console.log(dataIndex);
-        // }
-        // for (i = 0; i < 6; i++) {
+    var datesTimes = [];
+    var dates = [];
+    for (var i = 0; i < next5DaysAt3.length; i++) {
+        datesTimes.push(next5DaysAt3[i].dt_txt);
+        dates.push(dayjs(datesTimes[i]).format('MM/DD/YYYY'));
+    } 
+    
+    var forecastDate = document.createElement('h5');
+    var forecastCondition = document.createElement('p');
+    var forecastConditionIcon = document.createElement('img');
+    var forecastTemp = document.createElement('p');
+    var forecastHumidity = document.createElement('p');
+    var forecastWind = document.createElement('p');
 
-        // }
+    forecastDate.textContent = dates[0];
+    forecastCondition.textContent = next5DaysAt3[0].weather[0].main;
+    forecastCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
+    forecastConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + next5DaysAt3[0].weather[0].icon + '@2x.png');
+    forecastTemp.textContent = 'Temperature: ' + next5DaysAt3[0].main.temp + '˚ F';
+    forecastHumidity.textContent = 'Humidity: ' + next5DaysAt3[0].main.humidity + 
+    '%';
+    forecastWind.textContent = 'Wind Speed: ' + next5DaysAt3[0].wind.speed + ' mph';
 
-
-    }
-matchDate();
+    forecastEl.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
+     
 }
-//     var tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
-//     console.log(tomorrow);
-
-//     day1Forecast.textContent = dayjs(data);
-//     currentCondition.textContent = data.weather[0].main + ' '
-//     currentCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
-//     currentConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
-//     console.log(data.weather[0].icon);
-//     currentTemp.textContent = 'Temperature: ' + data.main.temp + '˚ F';
-//     currentHumidity.textContent = 'Humidity: ' + data.main.humidity + 
-//     '%';
-//     currentWind.textContent = 'Wind Speed: ' + data.wind.speed + ' mph';
-
-//     forecastEl.append(day1Forecast, day2Forecast, day3Forecast, day4Forecast, day5Forecast);
-// }
-
 var renderHistory = function(city) {
     var pastCityEl = document.createElement('button');
     pastCityEl.textContent = city;
