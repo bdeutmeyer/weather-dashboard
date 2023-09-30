@@ -10,12 +10,10 @@ var currentWeatherData = document.getElementById('current-weather-data');
 var forecastEl = document.getElementById('5day-forecast');
 var forecastHeading = document.getElementById('forecast-heading');
 
-
 var renderDate = function() {
     var currentDate = document.getElementById('date');
     var now = dayjs().format('MMM DD, YYYY');
     currentDate.textContent = now;
-
 }
 
 var searchFormHandler = function(event) {
@@ -23,10 +21,25 @@ var searchFormHandler = function(event) {
     var city = searchInputEl.value.trim();
     if (city) {
         fetchCoordinates(city);
-        renderHistory(city);
         searchInputEl.value = '';
-        searchHistory.push(city);
-        localStorage.setItem('city', JSON.stringify(searchHistory));
+        if (window.localStorage.length > 0) {
+            for (var i = 0; i < searchHistory.length; i++) {
+                if (city !== searchHistory[i]) {
+                    searchHistory.push(city);
+                    localStorage.setItem('city', JSON.stringify(searchHistory));
+                    renderHistory(city);
+                } else {
+                    break;
+                }
+            }
+        } else {                     
+            searchHistory.push(city);
+            localStorage.setItem('city', JSON.stringify(searchHistory));
+            renderHistory(city);
+        }
+
+       
+
         } else {
             alert('City not found');
         }
@@ -116,7 +129,7 @@ var renderForecast = function(data) {
         if (data[i].dt_txt.endsWith('15:00:00')) {
             next5DaysAt3.push(data[i]);
         }
-    } console.log(next5DaysAt3);
+    }
 
     var datesTimes = [];
     var dates = [];
@@ -124,26 +137,27 @@ var renderForecast = function(data) {
         datesTimes.push(next5DaysAt3[i].dt_txt);
         dates.push(dayjs(datesTimes[i]).format('MM/DD/YYYY'));
     } 
+    for (var i = 0; i < next5DaysAt3.length; i++) {
+        var forecastDate = document.createElement('h5');
+        var forecastCondition = document.createElement('p');
+        var forecastConditionIcon = document.createElement('img');
+        var forecastTemp = document.createElement('p');
+        var forecastHumidity = document.createElement('p');
+        var forecastWind = document.createElement('p');
     
-    var forecastDate = document.createElement('h5');
-    var forecastCondition = document.createElement('p');
-    var forecastConditionIcon = document.createElement('img');
-    var forecastTemp = document.createElement('p');
-    var forecastHumidity = document.createElement('p');
-    var forecastWind = document.createElement('p');
-
-    forecastDate.textContent = dates[0];
-    forecastCondition.textContent = next5DaysAt3[0].weather[0].main;
-    forecastCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
-    forecastConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + next5DaysAt3[0].weather[0].icon + '@2x.png');
-    forecastTemp.textContent = 'Temperature: ' + next5DaysAt3[0].main.temp + '˚ F';
-    forecastHumidity.textContent = 'Humidity: ' + next5DaysAt3[0].main.humidity + 
-    '%';
-    forecastWind.textContent = 'Wind Speed: ' + next5DaysAt3[0].wind.speed + ' mph';
-
-    forecastEl.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
-     
+        forecastDate.textContent = dates[i];
+        forecastCondition.textContent = next5DaysAt3[i].weather[0].main;
+        forecastCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
+        forecastConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + next5DaysAt3[i].weather[0].icon + '@2x.png');
+        forecastTemp.textContent = 'Temperature: ' + next5DaysAt3[i].main.temp + '˚ F';
+        forecastHumidity.textContent = 'Humidity: ' + next5DaysAt3[i].main.humidity + 
+        '%';
+        forecastWind.textContent = 'Wind Speed: ' + next5DaysAt3[i].wind.speed + ' mph';
+    
+        forecastEl.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
+    } 
 }
+
 var renderHistory = function(city) {
     var pastCityEl = document.createElement('button');
     pastCityEl.textContent = city;
@@ -162,6 +176,4 @@ searchHistoryEl.addEventListener('click', function(event) {
 })
 
 renderDate();
-//Example api path: data[i].lat OR data[i].lon
-//Forecast response: data.list[i].
-//Forecast list - new index every 3 hours. To get highs and lows, maybe 3 pm or 6 pm for highs, 3 am for lows? Match date? Take wind and humidity and stuff from that?
+console.log(searchHistory);
