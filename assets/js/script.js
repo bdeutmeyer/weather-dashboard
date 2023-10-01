@@ -11,12 +11,14 @@ var forecastEl = document.getElementById('5day-forecast');
 var forecastHeading = document.getElementById('forecast-heading');
 var resurrectionBay = document.getElementById('resurrection-bay');
 
+// Displays current date in header
 var renderDate = function() {
     var currentDate = document.getElementById('date');
     var now = dayjs().format('MMM DD, YYYY');
     currentDate.textContent = now;
 }
 
+// Sets search input value to local storage (unless that value already exists in local storage) and calls fetchCoordinates and renderHistory functions. Gives alert if user enters empty string
 var searchFormHandler = function(event) {
     event.preventDefault();
     var city = searchInputEl.value.trim();
@@ -34,6 +36,7 @@ var searchFormHandler = function(event) {
     }
 }
 
+// Takes text input and returns latitude and longitude, calls fetchCurrentData and fetchForecastData functions. Gives alert if the server responds with an error
 var fetchCoordinates = function(cityName) {
     var geocodeURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
 
@@ -51,6 +54,7 @@ var fetchCoordinates = function(cityName) {
         })
 }
 
+// Fetches data about current weather conditions, calls renderCurrent function
 var fetchCurrentData = function(lat, lon) {
     var currentURL = 'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&units=imperial&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
 
@@ -67,6 +71,7 @@ var fetchCurrentData = function(lat, lon) {
         })
 }
 
+// Fetches data about forecast, calls renderForecast function
 var fetchForecastData = function(lat, lon) {
     var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat +  '&lon=' + lon + '&units=imperial&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
 
@@ -83,6 +88,7 @@ var fetchForecastData = function(lat, lon) {
         })
 }
 
+// Hides placeholder image. Creates elements, sets attributes and text content, and appends elements to page to display current weather info
 var renderCurrent = function(data) {
     resurrectionBay.setAttribute('style', 'display: none');
     currentWeatherHeading.textContent = 'Current conditions in ' + data.name;
@@ -107,6 +113,7 @@ var renderCurrent = function(data) {
     currentWeatherData.append(currentCondition, currentConditionIcon, currentTemp, currentHumidity, currentWind);
 }
 
+// Creates elements, sets attributes and text content, and appends elements to page to display forecast info
 var renderForecast = function(data) {
     forecastHeading.textContent = '5-day forecast'
     if (forecastEl.hasChildNodes()) {
@@ -151,6 +158,7 @@ var renderForecast = function(data) {
     } 
 }
 
+// Takes info from local storage, renders buttons for each value. Renders Clear History button.
 var renderHistory = function() {
     searchHistoryEl.innerHTML = "";
     for (var i = 0; i < searchHistory.length; i++) {
@@ -168,6 +176,7 @@ var renderHistory = function() {
         clearHistoryBtn.setAttribute('class', 'btn m-1');
         searchHeading.appendChild(clearHistoryBtn);
 
+        // Clears search history on click
         clearHistoryBtn.addEventListener("click", function() {
             localStorage.clear();
             location.reload();
@@ -176,8 +185,10 @@ var renderHistory = function() {
 
 
 }
-
+// Calls searchFormHandler function on submit
 searchFormEl.addEventListener('submit', searchFormHandler);
+
+// Checks to ensure that the click happened on a button and not the parent element, then calls fetchCoordinates function for the button that was clicked
 searchHistoryEl.addEventListener('click', function(event) {
     var isItAButton = event.target.nodeName === 'BUTTON';
     if (!isItAButton) {
@@ -187,5 +198,6 @@ searchHistoryEl.addEventListener('click', function(event) {
     }  
 })
 
+// Immediate calls for renderDate and renderHistory functions
 renderDate();
 renderHistory();

@@ -20,14 +20,16 @@
     </header>
     <!-- Main section -->
     <main class="container">
-        <!-- Search section -->
+        <!-- Top half -->
         <section class="d-flex">
+            <!-- Search section -->
             <aside id="search" class="col-2">
                 <form id="search-form" class="form">
                     <input type="text" id="search-input" placeholder="City" class="form-control m-2">
                     <input type="submit" id="submit-button" value="Search" class="btn m-2">
                 </form>
             </aside>
+            <!-- Current weather section -->
             <section class="col-10 p-10">
                 <div id="current-weather" class="mt-2">
                     <img src="./assets/images/Resurrection-Bay-cropped.jpg" alt="Resurrection Bay - Seward, AK" id="resurrection-bay">
@@ -36,22 +38,22 @@
                 </div>
             </section>          
         </section>
-
+        <!-- Bottom half -->
         <section class="d-flex">
+            <!-- Search history section -->
             <aside class="col-2">
                 <div>
                     <h4 id="search-heading"></h4>
                 </div>
                 <div id="search-history"></div>
             </aside>
+            <!-- 5-Day Forecast section -->
             <section id="forecast-section" class="col-10 p-10">
                 <h2 id="forecast-heading" class="section-content"></h2>
                 <div id="5day-forecast" class="section-content row"></div>
             </section>
         </section>
-
     </main>
-
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
