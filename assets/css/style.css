@@ -1,16 +1,18 @@
+/* Color palette */
 :root {
     --cadet-gray: #83a0a0;
     --platinum: #dbd9db;
-
     --umber: #766153;
     --midnight-green: #023C40;
 }
 
+/* Overall styling */
 body {
     background-color: var(--cadet-gray);
     font-family: 'Tenor Sans', sans-serif;
 }
 
+/* Header section */
 header {
     background-color: var(--midnight-green);
     padding: 15px;
@@ -22,26 +24,29 @@ h3 {
     font-family: 'Young Serif', serif;
 }
 
+/* Placeholder image */
 #resurrection-bay {
     width: 100%;
     height: auto;
 }
 
+/* Section headings */
 h2 {
     color: white;
     font-family: 'Young Serif', serif;
     padding-top: 10px;
 }
 
+#search-heading {
+    text-align: center;
+}
+
+/* Misc */
 #submit-button {
     text-align: center;
     background-color: var(--umber);
     color: var(--platinum);
     width: 100%;
-}
-
-#search-heading {
-    text-align: center;
 }
 
 #current-weather, 
