@@ -38,7 +38,7 @@ var searchFormHandler = function(event) {
 
 // Takes text input and returns latitude and longitude, calls fetchCurrentData and fetchForecastData functions. Gives alert if the server responds with an error
 var fetchCoordinates = function(cityName) {
-    var geocodeURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
+    var geocodeURL = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
 
     fetch(geocodeURL)
         .then(function (response) {
