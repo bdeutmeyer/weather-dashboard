@@ -1,7 +1,7 @@
 :root {
     --cadet-gray: #83a0a0;
     --platinum: #dbd9db;
-    --saffron: #EEB902;
+
     --umber: #766153;
     --midnight-green: #023C40;
 }
@@ -20,6 +20,11 @@ h1,
 h3 {
     color: var(--platinum);   
     font-family: 'Young Serif', serif;
+}
+
+#resurrection-bay {
+    width: 100%;
+    height: auto;
 }
 
 h2 {
@@ -44,8 +49,9 @@ h2 {
     padding-left: 30px;
 }
 
-img {
+.icon {
     width: 30px;
     height: auto;
     margin-top: -7px;
 }
+

@@ -1,6 +1,7 @@
 var searchSectionEl = document.getElementById('search');
 var searchFormEl = document.getElementById('search-form');
 var searchInputEl = document.getElementById('search-input');
+var searchHeading = document.getElementById('search-heading');
 var searchHistoryEl = document.getElementById('search-history');
 var searchHistory = JSON.parse(localStorage.getItem('city')) || [];
 var currentWeatherEl = document.getElementById('current-weather');
@@ -8,6 +9,7 @@ var currentWeatherHeading = document.getElementById('current-weather-heading');
 var currentWeatherData = document.getElementById('current-weather-data');
 var forecastEl = document.getElementById('5day-forecast');
 var forecastHeading = document.getElementById('forecast-heading');
+var resurrectionBay = document.getElementById('resurrection-bay');
 
 var renderDate = function() {
     var currentDate = document.getElementById('date');
@@ -21,28 +23,16 @@ var searchFormHandler = function(event) {
     if (city) {
         fetchCoordinates(city);
         searchInputEl.value = '';
-        if (window.localStorage.length > 0) {
-            for (var i = 0; i < searchHistory.length; i++) {
-                if (city !== searchHistory[i]) {
-                    searchHistory.push(city);
-                    localStorage.setItem('city', JSON.stringify(searchHistory));
-                    renderHistory(city);
-                } else {
-                    break;
-                }
-            }
-        } else {                     
+        if (!searchHistory.includes(city)) {
             searchHistory.push(city);
             localStorage.setItem('city', JSON.stringify(searchHistory));
-            renderHistory(city);
-        }
-
-       
-
-        } else {
-            alert('City not found');
-        }
+            renderHistory();
+            }
+        } 
+    else {
+        alert('City not found');
     }
+}
 
 var fetchCoordinates = function(cityName) {
     var geocodeURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=2f4e60f9bd81d9d1b4be76ba147ad53c';
@@ -67,7 +57,6 @@ var fetchCurrentData = function(lat, lon) {
     fetch(currentURL)
         .then(function (response) {
             if (response.ok) {
-                console.log(response);
                 response.json()
                 .then(function (data) {
                     renderCurrent(data);
@@ -84,7 +73,6 @@ var fetchForecastData = function(lat, lon) {
     fetch(forecastURL)
         .then(function (response) {
             if (response.ok) {
-                console.log(response);
                 response.json()
                 .then(function (data) {
                     renderForecast(data.list);
@@ -96,6 +84,7 @@ var fetchForecastData = function(lat, lon) {
 }
 
 var renderCurrent = function(data) {
+    resurrectionBay.setAttribute('style', 'display: none');
     currentWeatherHeading.textContent = 'Current conditions in ' + data.name;
     if (currentWeatherData.hasChildNodes()) {
         currentWeatherData.innerHTML = null;
@@ -109,6 +98,7 @@ var renderCurrent = function(data) {
     currentCondition.textContent = data.weather[0].main + ' '
     currentCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
     currentConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png');
+    currentConditionIcon.setAttribute('class', 'icon')
     currentTemp.textContent = 'Temperature: ' + data.main.temp + '˚ F';
     currentHumidity.textContent = 'Humidity: ' + data.main.humidity + 
     '%';
@@ -149,6 +139,7 @@ var renderForecast = function(data) {
         forecastCondition.textContent = next5DaysAt3[i].weather[0].main;
         forecastCondition.setAttribute('style', 'display: inline; font-size: 135%; font-weight: bolder')
         forecastConditionIcon.setAttribute('src', 'https://openweathermap.org/img/wn/' + next5DaysAt3[i].weather[0].icon + '@2x.png');
+        forecastConditionIcon.setAttribute('class', 'icon')
         forecastTemp.textContent = 'Temperature: ' + next5DaysAt3[i].main.temp + '˚ F';
         forecastHumidity.textContent = 'Humidity: ' + next5DaysAt3[i].main.humidity + 
         '%';
@@ -157,16 +148,33 @@ var renderForecast = function(data) {
         forecastCard.append(forecastDate, forecastCondition, forecastConditionIcon, forecastTemp, forecastHumidity, forecastWind);
         forecastCard.setAttribute('class', 'col-2 m-1 ');
         forecastEl.append(forecastCard);
-        
     } 
 }
 
-var renderHistory = function(city) {
-    var pastCityEl = document.createElement('button');
-    pastCityEl.textContent = city;
-    pastCityEl.setAttribute('class', 'btn m-1');
-    pastCityEl.setAttribute('style', 'text-align: center; background-color: var(--umber); color: var(--platinum); width: 100%');
-    searchHistoryEl.appendChild(pastCityEl);
+var renderHistory = function() {
+    searchHistoryEl.innerHTML = "";
+    for (var i = 0; i < searchHistory.length; i++) {
+        var searchHistoryBtn = document.createElement("button");
+        searchHeading.textContent = "Past searches";
+        searchHistoryBtn.textContent = searchHistory[i];
+        searchHistoryBtn.setAttribute('style', 'text-align: center; background-color: var(--umber); color: var(--platinum); width: 100%');
+        searchHistoryBtn.setAttribute('class', 'btn m-1');
+        searchHistoryEl.appendChild(searchHistoryBtn);
+    }
+    if (searchHistory.length > 0) {
+        var clearHistoryBtn = document.createElement('button');
+        clearHistoryBtn.textContent = "Clear Search History";
+        clearHistoryBtn.setAttribute('style', 'text-align: center; background-color: var(--umber); color: var(--platinum); width: 100%');
+        clearHistoryBtn.setAttribute('class', 'btn m-1');
+        searchHeading.appendChild(clearHistoryBtn);
+
+        clearHistoryBtn.addEventListener("click", function() {
+            localStorage.clear();
+            location.reload();
+        });
+    }
+
+
 }
 
 searchFormEl.addEventListener('submit', searchFormHandler);
@@ -176,9 +184,8 @@ searchHistoryEl.addEventListener('click', function(event) {
       return;
     } else {
         fetchCoordinates(event.target.textContent);
-    }
-    
+    }  
 })
 
 renderDate();
-console.log(searchHistory);
+renderHistory();
